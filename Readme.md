@@ -29,16 +29,16 @@ This project is a FastAPI application that provides an endpoint for splitting bi
 
    or use conda
 
-3. Install the required dependencies:
-
-   ```bash
-    pip install -r requirements.txt
-   ```
-
-4. Install Tesseract OCR:
+3. Install Tesseract OCR:
 
    ```
    sudo apt-get install tesseract-ocr
+   ```
+
+4. Install the required dependencies:
+
+   ```bash
+    pip install -r requirements.txt
    ```
 
 ## Usage
