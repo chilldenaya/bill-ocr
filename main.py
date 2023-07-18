@@ -1,32 +1,27 @@
 import io
 
-import pytesseract
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from PIL import Image
 
-from ocr_engine import extract_product_details
+import ocr_engine
 
 app = FastAPI()
 
 
 @app.post("/extract_product_details")
 async def extract_product_details_api(file: UploadFile = UploadFile(...)):
-    # Check if the uploaded file is an image
     if not file.content_type.startswith("image/"):
         raise HTTPException(
             status_code=400, detail="Invalid file format. Only images are supported."
         )
 
-    # Read the uploaded image file
-    image = Image.open(io.BytesIO(await file.read()))
+    original_image = Image.open(io.BytesIO(await file.read()))
+    processed_image = ocr_engine.preprocess_image(original_image)
 
-    # Perform OCR on the image
-    ocr_output = pytesseract.image_to_string(image)
-
-    # Extract product details from OCR output
-    product_details = extract_product_details(ocr_output)
+    ocr_output = ocr_engine.get_bill_string(processed_image)
+    product_details = ocr_engine.extract_product_details(ocr_output)
 
     return product_details
 
